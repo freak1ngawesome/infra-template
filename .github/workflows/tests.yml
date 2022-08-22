@@ -1,4 +1,4 @@
-name: ESLint
+name: Test
 
 on: push
 
