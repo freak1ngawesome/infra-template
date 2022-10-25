@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Check all links
+    if: github.repository == 'github/docs-internal'
+    runs-on: ubuntu-latest
+    steps:
+        with:
+          node-version: 16.16.x
+          cache: npm
+      - name: npm ci
+        run: npm ci
+      - name: npm run build
+        run: npm run build
+      - name: npm run lint
+        run: npm run lint
+      - name: npm run test
+        run: npm run test
