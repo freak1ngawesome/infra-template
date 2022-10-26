@@ -24,5 +24,5 @@ jobs:
       - name: npm run test
         run: npm run test
       - name: Commit actor
-        run: echo "${{ GITHUB_ACTOR }}" 
+        run: echo "${{ GITHUB.ACTOR }}" 
       
