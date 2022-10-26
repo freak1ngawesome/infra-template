@@ -25,4 +25,14 @@ jobs:
         run: npm run test
       - name: Commit actor
         run: echo "${{ GITHUB.ACTOR }}" 
+        run: echo "${{ github.ref  }}" 
+      - name: Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBAPI_TOKEN }} 
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
       
