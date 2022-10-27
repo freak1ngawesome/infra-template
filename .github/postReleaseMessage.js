@@ -1,5 +1,5 @@
 const axios = require("axios");
-
+console.log('axios')
 const postReleaseMessage = async () => {
   let github = process.env.github;
   let curTag = github.ref_name;

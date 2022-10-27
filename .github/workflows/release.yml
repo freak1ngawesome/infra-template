@@ -32,7 +32,7 @@ jobs:
         run: npm install axios 
 
       - name: post Release Message
-        run: npm postReleasMessage
+        run: npm postReleaseMessage
 
       - name: Release
         uses: actions/create-release@v1
