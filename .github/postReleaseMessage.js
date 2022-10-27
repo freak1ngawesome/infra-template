@@ -1,5 +1,4 @@
 const axios = require("axios");
-console.log('axios')
 const postReleaseMessage = async () => {
   let {GITHUB_TOKEN, tag_name, yandex_auth_token, app_id } = process.env;
   console.log(GITHUB_TOKEN, tag_name, yandex_auth_token, app_id)
@@ -22,13 +21,14 @@ const postReleaseMessage = async () => {
 
   try {
     prevTag = await axios.get(repositoryLink + "/releases/latest", headersGit);
-
+    console.log(prevTag)
     if (!prevTag) {
       responce = await axios.get(repositoryLink + "/commits", headersGit);
       responce = responce.data;
+      console.log(responce.data)
     } else {
       responce = await axios.get(
-        `https://api.github.com/repos/nyamzmeya/infra-template/compare/${prevTag.data.tag_name}...${curTag}`,
+        repositoryLink + `/${prevTag.data.tag_name}...${curTag}`,
         headersGit
       );
       responce = responce.data.commits;
@@ -37,7 +37,7 @@ const postReleaseMessage = async () => {
     responce.forEach((commit) => {
       result += `${commit.sha} ${commit.commit.author.name} ${commit.commit.message} `;
     });
-
+    console.log(result)
     await axios.post(
       "https://api.tracker.yandex.net/v2/issues/HOMEWORKSHRI-135/comments",
       {
@@ -45,6 +45,8 @@ const postReleaseMessage = async () => {
       },
       headersTreker
     );
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 };
 postReleaseMessage().then();
