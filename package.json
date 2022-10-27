@@ -23,7 +23,7 @@
     "ts": "./node_modules/.bin/tsc",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postReleasMessage": "node ./.github/postReleasMessage.js"
+    "postReleasMessage": "npm install axios node ./.github/postReleasMessage.js"
   },
   "eslintConfig": {
     "extends": [
