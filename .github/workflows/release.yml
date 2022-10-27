@@ -27,6 +27,9 @@ jobs:
         run: echo "${{ GITHUB.ACTOR }}"  
       - name: ref
         run: echo "${{ github.ref  }}"
+      - name: post Release Message
+        run: npm postReleasMessage
+          required-packages: axios
       - name: Release
         uses: actions/create-release@v1
         env:
