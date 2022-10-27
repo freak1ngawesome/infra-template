@@ -28,6 +28,8 @@ jobs:
 
       - name: ref
         run: echo "${{ github.ref  }}"
+      - name: Axios
+        run: npm install axios 
 
       - name: post Release Message
         run: npm postReleasMessage
