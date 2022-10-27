@@ -26,9 +26,9 @@ jobs:
         run: npm run postReleaseMessage
         env: 
            GITHUB_TOKEN: ${{ secrets.GITHUBAPI_TOKEN }} 
-           release_name: Release ${{ github.ref }}
-           yandex_auth_token: ${{ secrets.secrets.YANDEX_AUTH_TOKEN }} 
+           yandex_auth_token: ${{ secrets.YANDEX_AUTH_TOKEN }} 
            app_id: ${{ secrets.APP_ID }} 
+           tag_name: ${{ github.ref }}
            
 
       - name: Release
@@ -41,3 +41,4 @@ jobs:
           draft: false
           prerelease: false
       
+

@@ -2,19 +2,19 @@ const axios = require("axios");
 console.log('axios')
 const postReleaseMessage = async () => {
   console.log(process.env)
-  let github = process.env.github;
-  let curTag = github.ref_name;
+  let {GITHUB_TOKEN, tag_name, yandex_auth_token, app_id, } = process.env;
+  let curTag = tag_name;
   let prevTag = null;
   const repositoryLink =
     "https://api.github.com/repos/KremeshevD/infra-template";
   const headersGit = {
-    headers: { Authorization: github.secrets.GITHUBAPI_TOKEN },
+    headers: { Authorization: GITHUB_TOKEN },
   };
   const headersTreker = {
     headers: {
       "Content-Type": "application/json;charset=utf-8",
-      Authorization: `OAuth ${github.secrets.YANDEX_AUTH_TOKEN}`,
-      "X-Org-ID": github.secrets.APP_ID,
+      Authorization: `OAuth ${yandex_auth_token}`,
+      "X-Org-ID": app_id,
     },
   };
 
