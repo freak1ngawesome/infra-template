@@ -24,6 +24,12 @@ jobs:
 
       - name: post Release Message
         run: npm run postReleaseMessage
+        env: 
+           GITHUB_TOKEN: ${{ secrets.GITHUBAPI_TOKEN }} 
+           release_name: Release ${{ github.ref }}
+           yandex_auth_token: ${{ secrets.secrets.YANDEX_AUTH_TOKEN }} 
+           app_id: ${{ secrets.APP_ID }} 
+           
 
       - name: Release
         uses: actions/create-release@v1
