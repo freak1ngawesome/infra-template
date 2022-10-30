@@ -1,12 +1,12 @@
 const axios = require("axios");
 const postReleaseMessage = async () => {
-  let {GITHUB_TOKEN, tag_name, yandex_auth_token, app_id } = process.env;
-  console.log(GITHUB_TOKEN, tag_name, yandex_auth_token, app_id)
+  let { GITHUB_TOKEN, tag_name, yandex_auth_token, app_id, commit_author, GITHUB_REPOSITORY } =
+    process.env;
   let curTag = tag_name;
   let prevTag = null;
 
   const repositoryLink =
-    "https://api.github.com/repos/KremeshevD/infra-template";
+    `https://api.github.com/repos/${GITHUB_REPOSITORY}`;
   const headersGit = {
     headers: { Authorization: GITHUB_TOKEN },
   };
@@ -14,39 +14,49 @@ const postReleaseMessage = async () => {
   const headersTreker = {
     headers: {
       "Content-Type": "application/json;charset=utf-8",
-      Authorization: `OAuth ${yandex_auth_token}`,
+      Authorization: yandex_auth_token,
       "X-Org-ID": app_id,
     },
   };
 
   try {
+    //получаем предыдущий релизный тэг
     prevTag = await axios.get(repositoryLink + "/releases/latest", headersGit);
-    console.log(prevTag)
     if (!prevTag) {
+      //получаем все коммиты
       responce = await axios.get(repositoryLink + "/commits", headersGit);
       responce = responce.data;
-      console.log(responce.data)
     } else {
+      //сравниваем предыдущий релиз и текущий
       responce = await axios.get(
-        repositoryLink + `/${prevTag.data.tag_name}...${curTag}`,
+        repositoryLink + `/compare/${prevTag.data.tag_name}...${curTag}`,
         headersGit
       );
       responce = responce.data.commits;
     }
-    let result = "";
-    responce.forEach((commit) => {
-      result += `${commit.sha} ${commit.commit.author.name} ${commit.commit.message} `;
-    });
-    console.log(result)
-    await axios.post(
-      "https://api.tracker.yandex.net/v2/issues/HOMEWORKSHRI-135/comments",
+    let result = responce
+      .map(
+        (commit) =>
+          `${commit.sha} ${commit.commit.author.name} ${commit.commit.message}`
+      )
+      .join("\n");
+    //постим информацию о релизе
+    const post = await axios.patch(
+      "https://api.tracker.yandex.net/v2/issues/HOMEWORKSHRI-135",
       {
-        text: result,
+        summary: `${curTag}  ${new Date().toLocaleDateString()}`,
+        description: `Ответственный за релиз ${commit_author},  коммиты, попавшие в релиз: \n ${result}`,
       },
       headersTreker
     );
-  } catch (error) {
-    console.log(error)
-  }
+    //добавляем комментарий
+    const comment = await axios.post(
+      "https://api.tracker.yandex.net/v2/issues/HOMEWORKSHRI-135/comments",
+      {
+        text: `Собрали Docker контейнер с Тэгом ${curTag}`,
+      },
+      headersTreker
+    );
+  } catch (error) {}
 };
 postReleaseMessage().then();
