@@ -20,7 +20,7 @@ const postReleaseMessage = async () => {
   };
 
   try {
-    //получаем предыдущий релизный тэг
+    //получаем предыдущий релизный  тэг
     prevTag = await axios.get(repositoryLink + "/releases/latest", headersGit);
     if (!prevTag) {
       //получаем все коммиты
