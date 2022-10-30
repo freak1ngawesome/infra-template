@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags:        
-      - 'rc-*'
+    tags:
+      - 'rc-0.0.*'
 
 jobs:
   build:
@@ -19,11 +19,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm ci
         run: npm ci
-      - name: lint
+      - name: Lint
         run: npm run lint
-      - name: test 
+      - name: Test
         run: npm run test
-      - name: build
+      - name: Build
         run: npm run build
       - name: Docker Hub loggin
         uses: docker/login-action@v2
@@ -41,25 +41,23 @@ jobs:
           tags: ${{ github.ref_name }}/app:latest
 
       - name: install Axios
-        run: npm install axios 
+        run: npm install axios
       - name: post Release Message
         run: npm run postReleaseMessage
-        env: 
-           GITHUB_TOKEN: ${{ secrets.GITHUBAPI_TOKEN }} 
-           yandex_auth_token: ${{ secrets.YANDEX_AUTH_TOKEN }} 
-           app_id: ${{ secrets.APP_ID }} 
-           tag_name: ${{ github.ref_name }}
-           commit_author: ${{ GITHUB.ACTOR }}
-           repository: ${{ GITHUB.GITHUB_REPOSITORY  }}
-           
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBAPI_TOKEN }}
+          yandex_auth_token: ${{ secrets.YANDEX_AUTH_TOKEN }}
+          app_id: ${{ secrets.APP_ID }}
+          tag_name: ${{ github.ref_name }}
+          commit_author: ${{ GITHUB.ACTOR }}
+          repository: ${{ GITHUB.GITHUB_REPOSITORY  }}
 
       - name: Release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUBAPI_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUBAPI_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-      
